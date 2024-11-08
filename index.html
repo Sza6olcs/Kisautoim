@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Játékautóim</title>
+    <style>
+        table {
+            width: 50%;
+            border-collapse: collapse;
+            margin: 0 auto;
+            
+        }
+        table, th, td {
+            border: 2px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            cursor: pointer;
+        }
+        #carForm {
+            display: inline-block;
+            width: 301px;
+            margin-bottom: 20px;
+            border: 2px solid black;
+            border-radius: 30px;
+            text-align: center;
+            padding: 10px;
+            color: purple ;
+
+        }
+        #owner, #manufacturer, #model, #year, #color {
+            width: 50%;
+            padding: 5px;
+            margin-bottom: 10px;
+            color: pink;
+            
+        }
+        input[type="button"] {
+            background-color: red;
+            color: white;
+            padding: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        
+        input[type="file"]::file-selector-button
+        {
+            background-color: rgb(19, 82, 40);
+            color: white;
+            padding: 5px;
+            border: black solid 2px;
+            cursor: pointer;
+            border-radius: 30px;
+            height: 30px;
+        }
+        input {
+            border: 2px solid rgb(0, 0, 0);
+            border-radius: 20px;
+            width: 250px;
+            height: 30px;
+        }
+        h1 {
+            display: flow-root;
+            text-align: center;
+            color: rgb(255, 255, 255);
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-size: 50px;
+            font-style: normal;
+            border: 1px solid black;
+        }
+        body {
+            background-color: rgb(25, 251, 112);
+            text-align: center;
+            
+        }
+        #owner {
+            border: 2px solid black;
+            border-radius: 20px;
+            width: 170px;
+            height: 45px;
+            color: black;
+        }
+        label {
+            color: black;
+            font-size: x-large;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Játékautóim</h1>
+    <form id="carForm">
+        <label for="owner">Tulajdonos:</label><br>
+        <select type="text" id="owner" name="owner" required>
+            <option value="Ádi">Ádi</option>
+            <option value="Áron">Áron</option>
+        </select>
+            <br><br>
+
+        <label for="manufacturer">Gyártó:</label><br>
+        <input type="text" id="manufacturer" name="manufacturer" required><br><br>
+
+        <label for="model">Model:</label><br>
+        <input type="text" id="model" name="model" required><br><br>
+
+        <label for="year">Év:</label><br>
+        <input type="number" id="year" name="year" min="1990" max="2030"><br><br>
+
+        <label for="color">Szín:</label><br>
+        <input type="text" id="color" name="color" required><br><br>
+
+        <label for="image">Kép az autóról:</label><br>
+        <input type="file" id="image" name="image" accept="image/*"><br><br>
+
+        <input type="button" value="Add to Collection" onclick="addCar()">
+    </form>
+    <br>
+    <table id="carTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">Tulajdonos</th>
+                <th onclick="sortTable(1)">Gyártó</th>
+                <th onclick="sortTable(2)">Model</th>
+                <th onclick="sortTable(3)">Év</th>
+                <th onclick="sortTable(4)">Szín</th>
+                <th>Kép</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Toy car entries will be added here -->
+        </tbody>
+    </table>
+    
+    <script>
+        function addCar() {
+            var table = document.getElementById("carTable").getElementsByTagName('tbody')[0];
+            var newRow = table.insertRow();
+
+            var ownerCell = newRow.insertCell(0);
+            var manufacturerCell = newRow.insertCell(1);
+            var modelCell = newRow.insertCell(2);
+            var yearCell = newRow.insertCell(3);
+            var colorCell = newRow.insertCell(4);
+            var imageCell = newRow.insertCell(5);
+
+            ownerCell.innerHTML = document.getElementById("owner").value;
+            manufacturerCell.innerHTML = document.getElementById("manufacturer").value;
+            modelCell.innerHTML = document.getElementById("model").value;
+            yearCell.innerHTML = document.getElementById("year").value;
+            colorCell.innerHTML = document.getElementById("color").value;
+            var imageInput = document.getElementById("image");
+            if (imageInput.files && imageInput.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    imageCell.innerHTML = '<img src="' + e.target.result + '" alt="Toy Car" style="width: 100px;">';
+                };
+                reader.readAsDataURL(imageInput.files[0]);
+            }
+
+            document.getElementById("carForm").reset();
+        }
+
+        function sortTable(columnIndex) {
+            var table = document.getElementById("carTable");
+            var rows = Array.prototype.slice.call(table.rows, 1);
+            var sortedRows = rows.sort(function(a, b) {
+                var cellA = a.cells[columnIndex].innerText.toLowerCase();
+                var cellB = b.cells[columnIndex].innerText.toLowerCase();
+                if (cellA < cellB) return -1;
+                if (cellA > cellB) return 1;
+                return 0;
+            });
+
+            for (var i = 0; i < sortedRows.length; i++) {
+                table.appendChild(sortedRows[i]);
+            }
+        }
+    </script>
+</body>
+</html>
